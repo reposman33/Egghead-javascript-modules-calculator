@@ -12,16 +12,20 @@
 }
 .result {
 	border: 1px solid #ccc;
+	text-align: center;
 	width: 200px;
 	margin-bottom: 3px;
 }
-#calculator,#calculator2 {
-	width: 400px;
+#calculator {
 	font-size: 22px;
+	margin: 33vh auto;
+	width: 400px;
 }
-
-.result, .result2 {
+.cbutton {
 	border: 1px solid #ccc;
-	width: 200px;
+	width: 40px;
+	height: 40px;
+	text-align: center;
+	display: inline-block;
 	margin-bottom: 3px;
 }
