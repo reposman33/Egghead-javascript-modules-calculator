@@ -2,8 +2,7 @@ var calculator = (function () {
 	var innerFactory = function(displayValue){
 		var innerCalc = {};	
 		let currentTotal = '';
-		let operators = [];
-		let operands = [];
+		let expression = [];
 
 		const operatorFunctions = {'*': multiply, '/':divide, '+': add, '-': subtract};
 		// first multply, then divide, add, subtract
@@ -21,7 +20,7 @@ var calculator = (function () {
 		}
 		function divide(leftOp, rightOp){
 			if(rightOp != 0){
-				return leftOp / rightOp;
+				return (leftOp / rightOp).toFixed(2);
 			}
 		}
 
@@ -36,20 +35,18 @@ var calculator = (function () {
 				let opIndex = 0; // set dummy value to get into wile loop
 				while(opIndex !== -1) {
 					// ..find out if this operator is used in the expression
-					opIndex = operators.findIndex(op => op == operator);
+					opIndex = expression.findIndex(op => op == operator);
 					if (opIndex !== -1) {
 						// ...if so, find operands for operator
-						const leftOperand = operands[opIndex];
-						const rightOperand = operands[opIndex+1];
-						// ...replace the 2 operands with the result of the sub expression
-						operands.splice(opIndex, 2, operatorFunctions[operator](leftOperand, rightOperand));
-						// ...remove used operator from list
-						operators.splice(opIndex,1);
+						const leftOperand = expression[opIndex - 1];
+						const rightOperand = expression[opIndex + 1];
+						// ...replace '5+3' with '8'
+						expression.splice(opIndex - 1, 3, operatorFunctions[operator](leftOperand, rightOperand));
 					}
 				}
 			});
 			// when all operators are executed, return remaining result
-            return operands[0];
+            return expression[0];
 		}
 
 		/**
@@ -60,15 +57,14 @@ var calculator = (function () {
 			if(val === "C"){
 				currentTotal = '';
 				displayValue(0);
-				operands = [];
-				operators = [];
+				expression = [];
 				currentTotal = '';
-				// is this a known operator?
+				// *, /, +, - etc
 			} else if(operatorsByPrecedence.includes(val)) {
 				if(currentTotal !== ''){
-					operands.push(parseInt(currentTotal))
+					expression.push(parseInt(currentTotal))
 				};
-				operators.push(val);
+				expression.push(val);
 				displayValue(val);
 				currentTotal = '';
 			} else if(['0','1','2','3','4','5','6','7','8','9'].includes(val)) {
@@ -76,7 +72,7 @@ var calculator = (function () {
 				displayValue(currentTotal);	
 			} else if(val === '=') {
 				if(currentTotal !== ''){
-					operands.push(parseInt(currentTotal));
+					expression.push(parseInt(currentTotal));
 				}
 				currentTotal = '';
 				displayValue(getExpressionValue());
