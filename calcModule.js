@@ -4,9 +4,7 @@ var calculator = (function () {
 		let currentTotal = '';
 		let expression = [];
 
-		const operatorFunctions = {'*': multiply, '/':divide, '+': add, '-': subtract};
-		// first multply, then divide, add, subtract
-		const operatorsByPrecedence = ['*','/','+','-'];
+		const operatorImplementations = {'*': multiply, '/':divide, '+': add, '-': subtract};
 
 		// implementation of operators
 		function add(leftOp, rightOp){
@@ -31,7 +29,8 @@ var calculator = (function () {
 		 * @returns - number
 		 */
 		function getExpressionValue() {
-			operatorsByPrecedence.forEach(operator => {
+			// ...loop through '*', '/', '+' etc
+			Object.keys(operatorImplementations).forEach(operator => {
 				let opIndex = 0; // set dummy value to get into wile loop
 				while(opIndex !== -1) {
 					// ..find out if this operator is used in the expression
@@ -41,7 +40,7 @@ var calculator = (function () {
 						const leftOperand = expression[opIndex - 1];
 						const rightOperand = expression[opIndex + 1];
 						// ...replace '5+3' with '8'
-						expression.splice(opIndex - 1, 3, operatorFunctions[operator](leftOperand, rightOperand));
+						expression.splice(opIndex - 1, 3, operatorImplementations[operator](leftOperand, rightOperand));
 					}
 				}
 			});
@@ -59,8 +58,8 @@ var calculator = (function () {
 				displayValue(0);
 				expression = [];
 				currentTotal = '';
-				// *, /, +, - etc
-			} else if(operatorsByPrecedence.includes(val)) {
+				// '*', '/', '+' etc
+			} else if(Object.keys(operatorImplementations).includes(val)) {
 				if(currentTotal !== ''){
 					expression.push(parseInt(currentTotal))
 				};
